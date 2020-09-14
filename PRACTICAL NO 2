@@ -1,0 +1,48 @@
+PRACTICAL 2
+1.Add a user
+useradd creates a new user account according to the options specified on the command line and the default values set in the /etc/default/useradd file.
+useradd [OPTIONS] USERNAME
+$ sudo useradd username
+2.Network Settings
+netstat –I to find the interface name.
+sudo ifconfig eth0 192.168.72.6 netmask 255.255.255.0
+Then to add a default gateway:
+sudo route add default gw 192.168.72.1 eth0
+3.Configure service
+Command-sudo systemctl start service
+4.Display the list service
+To list all loaded services on your system (whether active; running, exited or failed, use the list-units subcommand and --type switch with a value of service.
+# systemctl list-units --type=service
+OR
+# systemctl --type=service
+5.Change to static ip address
+1. To setup static IP address in Debian
+$ nano /etc/network/interfaces
+Output:
+auto eth0
+iface eth0 inet dhcp
+
+Change it so it looks like this:
+auto eth0
+iface eth0 inet static 
+  address 192.168.0.100
+  netmask 255.255.255.0
+  gateway 192.168.0.1
+  dns-nameservers 4.4.4.4
+  dns-nameservers 8.8.8.8
+  
+2. Save the file and then edit /etc/resolv.conf like this:
+# nano /etc/resolv.conf
+nameserver 8.8.8.8 # Replace with your nameserver ip
+nameserver 4.4.4.4 # Replace with your nameserver ip
+3. Restart the networking on your system with:
+$ /etc/init.d/network restart  [On SysVinit]
+$ systemctl restart network    [On SystemD]
+6. Sudo Setting
+  It is mainly used for provide commands execution right for any user or group.
+  Only root user has execution right for all commands .
+  But normal user have limited commands execution rights
+
+To edit sudo configuration file use:
+  $ visudo
+The above command will open /etc/sudoers file in an editor. This file is the main configuration file for sudo settings.
