@@ -1,0 +1,67 @@
+INTRODUCTION:
+1.NFS (Network File System) which is basically used to share the files and folders between Linux systems.
+2. It allows us to mount the file system in the network and remote users can interact and the share just like local file and folders.
+
+1.Install NFS Kernel Server
+$ sudo apt install nfs-kernel-server
+Step 2: Create the Export Directory
+The directory that we want to share with the client system is called an export directory,we are creating an export directory by thename of “tycs” in our system’s mnt(mount) 
+directory specifying a mount folder name, through the following command as root:
+$ sudo mkdir -p /mnt/tycs
+
+As we want all clients to access the directory, we will remove restrictive permissions of the export folder:
+$ sudo chown nobody:nogroup /mnt/tycs
+$ sudo chmod 777 /mnt/tycs
+
+Step 3: Assign server access to client(s) through NFS export file
+we will need to provide the clients the permission to access the host server machine. This permission is defined through the exports file located 
+in your system’s /etc folder. 
+$ sudo nano /etc/exports
+
+Once you have opened the file, you can allow access to:
+A single client by adding the following line in the file:
+/mnt/tycs clientIP(rw,sync,no_subtree_check)
+Multiple clients, by specifying an entire subnet that the clients belong to:
+/mnt/tycs subnetIP/24(rw,sync,no_subtree_check
+
+rw: read and write operations
+sync: write any change to the disc before applying it
+no_subtree_check: prevent subtree checking
+
+Step 4: Export the shared directory
+After making all the above configurations in the host system, now is the time to export the shared directory:
+$ sudo exportfs -a
+
+Restart the NFS Kernel server as follows:
+$sudo systemctl restart nfs-kernel-server
+Step 5: Open firewall for the client (s)
+An important step is to verify that the server’s firewall is open to the clients so that they can access the shared content:
+$ sudo ufw allow from [clientIP or clientSubnetIP] to any port nfs
+
+In our example, we are giving access to an entire subnet of clients machines:
+$ sudo ufw allow from 192.168.100/24 to any port nfs
+
+Now when you check the status of your Ubuntu firewall through the following command, you will be able to view the Action status as “Allow” for the client’s IP.
+$ sudo ufw status
+
+Configuring the Client Machine
+Step 1: Install NFS Common
+Before installing the NFS Common application, we need to update our system’s repository index with that of the Internet through the following apt command as sudo:
+$ sudo apt-get update
+
+Run the following command in order to install the NFS Common client on your system:
+$ sudo apt-get install nfs-common
+
+Step 2: Create a mount point for the NFS host’s shared folder
+Your client’s system needs a directory where all the content shared by the host server in the export folder can be accessed. You can create this folder anywhere on your system. 
+We are creating a mount folder in the mnt directory of our client’s machine:
+$ sudo mkdir -p /mnt/tycs_client
+
+Step 3: Mount the shared directory on the client
+Use the following command in order to mount the shared folder from the host to a mount folder on the client:
+$ sudo mount serverIP:/exportFolder_server /mnt/mountfolder_client
+$ sudo mount 192.168.100.5:/mnt/tycs /mnt/tycs_client
+
+Step 4: Test the connection
+Please create or save a file in the export folder of the NFS host server. Now, open the mount folder on the client machine; you should be able to view the same file shared and  
+accessible in this folder.
