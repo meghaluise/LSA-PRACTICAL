@@ -1,0 +1,44 @@
+INTRODUCTION:
+1.Secure Shell, sometimes referred to as Secure Socket Shell, is a protocol which allows you to connect securely to a remote computer or a server by using a text-based interface.
+2.When a secure SSH connection is established, a shell session will be started, and you will be able to manipulate the server by typing commands within the client on your local 
+computer.
+
+To enable SSH password authentication, you must SSH in as root to edit this file:
+1./etc/ssh/sshd_config
+2.Then, change:
+PasswordAuthentication no to PasswordAuthentication yes
+3.After making that change, restart the SSH service by running the following command as root:
+sudo service ssh restart
+
+To check if the client is available or not you will need to:
+1.Load an SSH terminal. You can either search for “terminal” or press CTRL + ALT + T on your keyboard.
+2.Type in ssh and press Enter in the terminal.
+3.If the client is installed, you will receive a response that looks like this:
+username@host:~$ ssh
+
+STEPS TO INSTALL SSH CLIENT:
+Run the following command to install the OpenSSH client on your computer: 
+1.sudo apt-get install openssh-client
+2.Type in your superuser password when asked.
+3.Enter to complete the installation.
+
+TO INSTALL OPENSSH SERVER
+1.sudo apt-get install openssh-server ii.
+2.Enter and Y to allow the installation
+you can check if the SSH server is running on the machine by typing:
+sudo service ssh status
+3.you can change the default port for SSH connections.
+ sudo nano /etc/ssh/sshd_config
+
+If you need to install Nano, run this command:
+sudo apt-get install nano
+
+We need to restart SSH service every time we make any changes to the sshd_config file:
+sudo service ssh restart
+
+you can establish a secure remote connection with your servers. To do so:
+Open the SSH terminal on your machine and run the following command
+1.ssh your_username@host_ip_address
+If the username on  machine matches the one on the server type:
+2.ssh host_ip_address
+3.Type in your password and enter. 
